@@ -1,5 +1,7 @@
 const express = require('express');
-const path  = require('../util/path');
+const path = require('path');
+const rootDir = require('../util/path');
+const fs = require('fs');
 
 const User = require('../models/user');
 
@@ -9,14 +11,32 @@ exports.postUser = (req,res,next) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
-    const data = User.create({
-        firstName:firstName,
-        lastName:lastName,
-        email:email,
-        password:password
-    })
-    .then(result => {
-        res.json(result);
-    })
-    .catch(err => console.log(err))
+    User.findAll({where:{email:email}})
+            .then(userExist => {
+                if(userExist.length>0){
+                    fs.readFile(path.join(rootDir, 'client', 'signup.html'), 'utf8', (err, data) =>{
+                        if (err) {
+                            console.log(err);
+                            res.status(500).send('Internal Server Error');
+                        }else{
+                            res.json({ res: "Error : This USER already EXISTS" });
+                        }
+                    })  
+                }else{
+                    User.create({
+                        firstName:firstName,
+                        lastName:lastName,
+                        email:email,
+                        password:password
+                    })
+                    .then(result => {
+                        //res.json(result);
+                        console.log("result is:")
+                        console.log(result);
+                    })
+                    .catch(err => console.log(err))
+                }
+            })
+            .catch(err => console.log(err))
+     
 }

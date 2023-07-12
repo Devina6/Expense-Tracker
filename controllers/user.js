@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const bcrypt = require('bcrypt');
 const rootDir = require('../util/path');
 const fs = require('fs');
 
@@ -11,34 +12,44 @@ exports.Signup = (req,res,next) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
-    User.findAll({where:{email:email}})
-            .then(userExist => {
-                if(userExist.length>0){
-                    fs.readFile(path.join(rootDir, 'client', 'signup.html'), 'utf8', (err, data) =>{
-                        if (err) {
-                            console.log(err);
-                            res.status(500).send('Internal Server Error');
+    if(firstName!='' && lastName!='' && email!='' && password!=''){
+        User.findAll({where:{email:email}})
+                .then(userExist => {
+                    if(userExist.length>0){
+                        fs.readFile(path.join(rootDir, 'client', 'signup.html'), 'utf8', (err, data) =>{
+                            if (err) {
+                                console.log(err);
+                                res.status(500).send('Internal Server Error');
+                            }else{
+                                res.json({ res: "Error : This USER already EXISTS" });
+                            }
+                        })  
+                    }else{
+                        const salt = 10; //more salt more encrypt-increase based on number of users
+                        bcrypt.hash(password,salt,async(err,hash) => {
+                        if(err){
+                            console.log(err)
                         }else{
-                            res.json({ res: "Error : This USER already EXISTS" });
-                        }
-                    })  
-                }else{
-                    User.create({
-                        firstName:firstName,
-                        lastName:lastName,
-                        email:email,
-                        password:password
-                    })
-                    .then(result => {
-                        //res.json(result);
-                        console.log("result is:")
-                        console.log(result);
-                    })
-                    .catch(err => console.log(err))
-                }
-            })
-            .catch(err => console.log(err))
-     
+                            await User.create({
+                            firstName:firstName,
+                            lastName:lastName,
+                            email:email,
+                            password:hash
+                        })
+                        .then(result => {
+                            //res.json(result);
+                            //console.log(result);
+                            res.json({res:"Successfully Registered!",pass:true})
+                        })
+                        .catch(err => console.log(err))
+                    }
+                })
+            }
+        })
+        .catch(err => console.log(err))
+    }else{
+        res.json({res:"Error",pass:false})
+    }
 }
 
 exports.login = (req,res,next) => {
@@ -52,11 +63,16 @@ exports.login = (req,res,next) => {
                         console.log(err);
                         res.status(500).send('Internal Server Error');
                     }else{
-                        if(password===user[0].dataValues.password){
-                            res.json({res:"Successfully Logged-in",pass:true})
-                        }else{
-                            res.json({res:"Please enter the correct details", pass:false})
-                        }
+                        bcrypt.compare(password,user[0].dataValues.password,(err,result) => {
+                            if(err){
+                                res.json({res:"Something went wrong",pass:false})
+                            }
+                            if(result){
+                                res.json({res:"Successfully Logged-in",pass:true})
+                            }else{
+                                res.json({res:"Please enter the correct details", pass:false})
+                            }
+                        })
                     }
             })
             }else{

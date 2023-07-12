@@ -9,7 +9,12 @@ async function details(e){
     let res = await axios.post('http://localhost:5000/adduser',obj);
 
     let newdiv = document.createElement("div");
-    newdiv.className = "alert alert-danger";
+    if(res.data.pass){
+        newdiv.className = "alert alert-success";
+    }else{
+        newdiv.className = "alert alert-danger";
+    }
+    
     newdiv.role = "alert";
     let child = document.createElement("p");
     child.textContent = `${res.data.res}`;

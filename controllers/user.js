@@ -68,7 +68,7 @@ exports.login = (req,res,next) => {
                                 res.json({res:"Something went wrong",pass:false})
                             }
                             if(result){
-                                res.json({res:"Successfully Logged-in",pass:true})
+                                res.json({res:"Successfully Logged-in",pass:true,user_id:user[0].dataValues.id})
                             }else{
                                 res.json({res:"Please enter the correct details", pass:false})
                             }

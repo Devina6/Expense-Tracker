@@ -37,6 +37,7 @@ async function login(e){
     let newdiv = document.createElement("div");
     if (res.data.pass){
         newdiv.className = "alert alert-success";
+        window.location.href = `expense.html?user_id=${res.data.user_id}`;
     }else{
         newdiv.className = "alert alert-danger";
     }

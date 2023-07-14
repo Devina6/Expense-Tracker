@@ -3,6 +3,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const rootDir = require('../util/path');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
@@ -52,6 +53,10 @@ exports.Signup = (req,res,next) => {
     }
 }
 
+function generateToken(id){
+    return jwt.sign({userId:id},'8ytrdfghbvfde34567ytdcvyr57465rtfgjf47gy4557tyfghchgtue4348768fdchgyr5437097ttrfchvr5676865343wdghjf5xdy46tcrs7re4ech6u53tdytr56ehgu')
+}
+
 exports.login = (req,res,next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -63,12 +68,12 @@ exports.login = (req,res,next) => {
                         console.log(err);
                         res.status(500).send('Internal Server Error');
                     }else{
-                        bcrypt.compare(password,user[0].dataValues.password,(err,result) => {
+                        bcrypt.compare(password,user[0].password,(err,result) => {
                             if(err){
                                 res.json({res:"Something went wrong",pass:false})
                             }
                             if(result){
-                                res.json({res:"Successfully Logged-in",pass:true,user_id:user[0].dataValues.id})
+                                res.json({res:"Successfully Logged-in",pass:true,token:generateToken(user[0].id)}})
                             }else{
                                 res.json({res:"Please enter the correct details", pass:false})
                             }

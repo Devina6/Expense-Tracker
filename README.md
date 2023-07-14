@@ -6,3 +6,4 @@ install mysql2
 install sequelize
 install cors
 install bcrypt
+install jsonwebtoken

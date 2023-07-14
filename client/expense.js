@@ -1,8 +1,7 @@
-window.onload = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const user_id = urlParams.get('user_id');
+let token = localStorage.getItem('token');
 
-    axios.get(`http:localhost:5000/expense/index/${user_id}`)
+window.onload = () => {
+    axios.get('http:localhost:5000/expense/index',{headers:{"Authorizaton":token}})
         .then(response => {
             for(var i=0;i<response.data.length;i++){
                 displayExpense(response.data[i]);
@@ -14,16 +13,15 @@ window.onload = () => {
 
 async function expense(e){
     e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    const user_id = urlParams.get('user_id');
     let obj = {
         amount:document.getElementById("amount").value,
         description:document.getElementById("description").value,
         category:document.getElementById("category").value
     }
-    await axios.post(`http://localhost:5000/expense/addExpense/${user_id}`,obj)
+    await axios.post('http://localhost:5000/expense/addExpense',obj,{headers:{"Authorizaton":token}})
         .then(result => {
             displayExpense(result.data);
+            window.location.reload;
         })
         .catch(err => console.log(err))
 }
@@ -66,9 +64,10 @@ async function removeItem(e){
             const _id = e.target.parentElement.parentElement.getAttribute('data-key');
             
             let url = "http://localhost:5000/expense/delete/"+ _id
-            await axios.get(url)
+            await axios.get(url,{headers:{"Authorizaton":token}})
                 .then(response => {
                     tBody.removeChild(tRow);
+                    window.location.reload;
                 })
                 .catch(err => console.log(err))
             

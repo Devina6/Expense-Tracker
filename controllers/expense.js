@@ -9,7 +9,7 @@ const Expense = require('../models/expense');
 
 
 exports.getIndex = (req,res,next) => {
-    const id = req.params.userId;
+    const id = req.user.id;
     Expense.findAll({where:{userId:id}})
         .then(expenses => {
             res.json(expenses);
@@ -25,7 +25,7 @@ exports.postExpense = (req,res,next) => {
     let amount = req.body.amount;
     let description = req.body.description;
     let category = req.body.category;
-    let id = req.params.userId
+    let id = req.user.id
     if(amount!='' && description!='' && category!='' && id!=''){
         Expense.create({
             amount:amount,
@@ -42,7 +42,6 @@ exports.postExpense = (req,res,next) => {
 
 exports.deleteExpense = (req,res,next) => {
 
-    console.log("------------")
     const id = req.params.expenseId;
     Expense.findByPk(id)
         .then(expense => {
@@ -53,7 +52,7 @@ exports.deleteExpense = (req,res,next) => {
             }
         })
         .then(result => {
-            res.redirect('/expense/index/${result.dataValues.userId}')
+           res.redirect('/expense/index')
         })
         .catch(err => console.log(err))
 }

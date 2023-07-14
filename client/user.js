@@ -33,11 +33,11 @@ async function login(e){
         password:document.getElementById("password").value
     }
     let res = await axios.post('http://localhost:5000/login',obj);
-
+    localStorage.setItem('token',res.data.token)
     let newdiv = document.createElement("div");
     if (res.data.pass){
         newdiv.className = "alert alert-success";
-        window.location.href = `expense.html?user_id=${res.data.user_id}`;
+         window.location.href = 'expense.html';
     }else{
         newdiv.className = "alert alert-danger";
     }

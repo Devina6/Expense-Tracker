@@ -3,9 +3,11 @@ let token = localStorage.getItem('token');
 window.onload = () => {
     await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"Authorizaton":token}})
         .then(response1 => {
-            if(response1===true){
+            if(response1.data){
                 let data = document.getElementById('premiumdata');
                 data.textContent = "You are a PREMIUM User!"
+                let btn = document.getElementById('leaderBtn');
+                btn.style.visibility = 'visible';
             }
             else{
                 let btn = document.getElementById('razorpayBtn');
@@ -140,4 +142,24 @@ async function premium(e){
             })    
             })
             .catch(err => console.log(err))
+}
+
+async function leaderBoard(e){
+    e.preventDefault();
+    axios.get('http://localhost:5000/premium/leaderboardstatus')
+        .then(lists => {
+            lists.data.forEach(list => {
+                displayStatus(list)
+            })
+            
+        })
+        .catch(err => console.log(err));
+}
+
+function displayStatus(list){
+    let parent = document.getElementById('leaderOrder');
+    let child = document.createElement('li');
+    child.textContent =`${list.firstName}`+" "+`${list.lastName}`+" ---> "+`${list.total_expense}`;
+    parent.appendChild(child);
+    
 }

@@ -4,14 +4,27 @@
         <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
+        <div class="offcanvas offcanvas-end text-bg-dark" id="leaderBtnShow">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" style="font-family: Georgia, 'Times New Roman', Times, serif;">LeaderBoard</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div>
+                <ol id="leaderOrder"></ol>
+              </div>
+            </div>
+          </div>
         <div class="container">
             <div id="main">
                 <br><br>
                 <form  method="post">
                     <input id="razorpayBtn" type="submit" class="btn btn-success btn-lg" value="Buy Premium Membership" onclick="premium(event)" style="visibility: hidden;">
                     <h2 class="text-left" id="premiumdata" style="font-family: Georgia, 'Times New Roman', Times, serif;"></h2>
+                    <input id="leaderBtn" type="button" class="btn btn-success btn-lg" data-bs-toggle="offcanvas" value="Leaderboard Status" onclick="leaderBoard(event)" style="visibility: hidden;" data-bs-target="#leaderBtnShow" >
                 </form>
                 <br><br>
                 <h2 class="text-center" style="font-family: Georgia, 'Times New Roman', Times, serif;">Add Expense</h2>

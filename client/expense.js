@@ -159,7 +159,7 @@ async function leaderBoard(e){
 function displayStatus(list){
     let parent = document.getElementById('leaderOrder');
     let child = document.createElement('li');
-    child.textContent =`${list.firstName}`+" "+`${list.lastName}`+" ---> "+`${list.total_expense}`;
+    child.textContent =`${list.firstName}`+" "+`${list.lastName}`+" ---> "+`${list.totalExpense}`;
     parent.appendChild(child);
     
 }

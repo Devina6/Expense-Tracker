@@ -3,11 +3,13 @@ let token = localStorage.getItem('token');
 window.onload = () => {
     await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"Authorizaton":token}})
         .then(response1 => {
-            if(response1){
-                let btn = document.getElementById('razorpayBtn');
-                btn.style.visibility = 'hidden';
+            if(response1===true){
                 let data = document.getElementById('premiumdata');
                 data.textContent = "You are a PREMIUM User!"
+            }
+            else{
+                let btn = document.getElementById('razorpayBtn');
+                btn.style.visibility = 'visible';
             }
             axios.get('http:localhost:5000/expense/index',{headers:{"Authorizaton":token}})
                 .then(response2 => {

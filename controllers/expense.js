@@ -1,8 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bcrypt = require('bcrypt');
-const rootDir = require('../util/path');
-const fs = require('fs');
+const Sequelize = require('sequelize');
 
 const User = require('../models/user');
 const Expense = require('../models/expense');
@@ -33,7 +32,21 @@ exports.postExpense = (req,res,next) => {
             category:category,
             userId:id
         })
-        .then(result => {
+        .then( async(result) => {
+            
+            const updateTotalExpense = async (userId, amount) => {
+                try {
+                  const user = await User.findByPk(userId); 
+                  if (user) {
+                    const updatedTotalExpense = parseInt(user.totalExpense) + parseInt(amount);
+                    await user.update({ totalExpense: updatedTotalExpense });
+                  }
+                } 
+                catch (error) {
+                  console.log(error);
+                }
+              };  
+            updateTotalExpense(id, amount);         
             res.json(result);
         })
         .catch(err => console.log(err))

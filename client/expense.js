@@ -1,13 +1,22 @@
 let token = localStorage.getItem('token');
 
 window.onload = () => {
-    axios.get('http:localhost:5000/expense/index',{headers:{"Authorizaton":token}})
-        .then(response => {
-            for(var i=0;i<response.data.length;i++){
-                displayExpense(response.data[i]);
+    await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"Authorizaton":token}})
+        .then(response1 => {
+            if(response1){
+                let btn = document.getElementById('razorpayBtn');
+                btn.style.visibility = 'hidden';
+                let data = document.getElementById('premiumdata');
+                data.textContent = "You are a PREMIUM User!"
             }
-        })
-        .catch(err => console.log(err))
+            axios.get('http:localhost:5000/expense/index',{headers:{"Authorizaton":token}})
+                .then(response2 => {
+                    for(var i=0;i<response2.data.length;i++){
+                        displayExpense(response2.data[i]);
+                    }
+                })
+                .catch(err => console.log(err))
+        }).catch(err => console.log(err))
 }
 
 
@@ -94,7 +103,11 @@ async function premium(e){
                             headers:{"Authorizaton":token}
                         })
                         .then((result)=>{
-                        alert("You are a PREMIUM user now")
+                            let btn = document.getElementById('razorpayBtn');
+                            btn.style.visibility = 'hidden';
+                            //alert("You are a PREMIUM user now");
+                            let data = document.getElementById('premiumdata');
+                            data.textContent = "You are now a PREMIUM User!"
                         })
                         .catch(err => console.log(err))
                     }

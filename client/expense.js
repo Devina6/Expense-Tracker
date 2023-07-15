@@ -74,3 +74,47 @@ async function removeItem(e){
         }
     }
 }
+
+async function premium(e){
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    
+    let response = await axios.get('http://localhost:5000/purchase/premiummembership',{headers:{"Authorizaton":token}})
+            
+            let options = {
+                key:response.data.key_id, //Enter the key ID generated from the dashboard
+                order_id:response.data.order.id, //for one time payment
+                //this handler function will handle the success payment
+                handler:async function (response){
+                    try{
+                        
+                        await axios.post('http://localhost:5000/purchase/updatetransactionstatus',{
+                            order_id:options.order_id,
+                            payment_id:response.razorpay_payment_id,
+                    },
+                    {
+                        headers:{"Authorizaton":token}
+                    })
+                    .then((result)=>{
+                        
+                        alert("You are a PREMIUM user now")
+                    })
+                    .catch(err => console.log(err))
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                    
+                },
+            };
+            const rzp1 = new window.Razorpay(options);
+            rzp1.open();
+            e.preventDefault();
+
+            rzp1.on('payment.failed',function(response1){
+                console.log(response1)
+                alert('Something went wrong');
+            })            
+
+        
+}

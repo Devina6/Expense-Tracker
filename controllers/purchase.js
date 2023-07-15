@@ -36,22 +36,28 @@ exports.purchasepremium = (req,res,next) => {
     }
 }
 
-exports.updateTransactionStatus = (req,res,next) => {
+exports.updateTransactionStatus = async(req,res,next) => {
     try{
         const{payment_id,order_id} = req.body;
-        Order.findOne({where:{orderId:order_id}})
-            .then(order => {
-                order.update({paymentId:payment_id,status:"SUCCESSFUL"})
-                    .then( () => {
-                        req.user.update({ispremiumuser:true})
-                            .then( () =>{
-                                return res.status(202).json({success:true,message:"Transaction Successful"})
-                            })
-                            .catch(err => console.log(err))
-                    })
-                    .catch(err => console.log(err))
-            })
-            .catch(err => console.log(err))
+        const order = await Order.findOne({where:{orderId:order_id}})
+        if(payment_id!="00000000"){
+            const promise1 =  order.update({paymentId:payment_id,status:"SUCCESSFUL"})
+            const promise2 = req.user.update({ispremiumuser:true})
+            Promise.all([promise1,promise2])
+                .then(( )=> {
+                    return res.status(202).json({success:true,message:"Transaction Successful"})
+                })
+                .catch(err => console.log(err))
+        }else{
+            const promise1 =  order.update({paymentId:payment_id,status:"FAILURE"})
+            const promise2 = req.user.update({ispremiumuser:false})
+            Promise.all([promise1,promise2])
+                .then(( )=> {
+                    return res.status(202).json({success:false,message:"Transaction Failure"})
+                })
+                .catch(err => console.log(err))
+        }
+        
     }
     catch(err){
         console.log(err);

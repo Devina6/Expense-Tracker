@@ -2,6 +2,15 @@ const Razorpay = require('razorpay');
 const Order = require('../models/order');
 require('dotenv').config();
 
+exports.isPremium = (req,res,next) => {
+    const user_id = req.user.id;
+    User.findOne({where:{id:user_id}})
+        .then(user => {
+            res.json(user.ispreminumuser);
+        })
+        .catch(err => console.log(err))
+}
+
 exports.purchasepremium = (req,res,next) => {
     try{
         let rzp = new Razorpay({

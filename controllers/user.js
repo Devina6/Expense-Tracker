@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const rootDir = require('../util/path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-
+const Sib = require('sib-api-v3-sdk');
+require('dotenv').config();
 const User = require('../models/user');
 
 exports.Signup = (req,res,next) => {
@@ -84,4 +85,37 @@ exports.login = (req,res,next) => {
                 res.json({res:"Error : User not Registered, Please Signup", pass:false})
             }
         })
+}
+
+exports.forgotPassword = (req,res,next) => {
+    const client = Sib.ApiClient.instance
+    const apiKey = client.authentications['api-key']
+    apiKey.apiKey = process.env.PASSWORD_MAIL
+    const email = req.body.email
+    const tranEmailApi = new Sib.TransactionalEmailsApi()
+    const sender = {
+        email:'work.devina@gmail.com',
+        name:"Devina"
+    }
+    const receiver =[
+        { 
+        email:email
+    }]
+    tranEmailApi.sendTransacEmail({
+        sender,
+        to:receiver,
+        subject:"Expense Tracker Project Mail",
+        textContent:"Hello, you can reset your {{params.role}} here.",
+        params:{
+            role:"PASSWORD"
+        },
+        htmlContent:
+            `<h1> devina sending mail</h1>
+            <a href="https://google.com">vist</a>`
+        
+    })
+    .then((result=>{
+        res.json({success:true})
+    }))
+    .catch(console.log())
 }

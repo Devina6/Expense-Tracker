@@ -20,10 +20,7 @@ async function details(e){
     child.textContent = `${res.data.res}`;
     newdiv.appendChild(child);
     let warning = document.getElementById("warning")
-    warning.className = "card card-body";
     warning.appendChild(newdiv);
-}
-  
 }
 
 async function login(e){
@@ -47,6 +44,14 @@ async function login(e){
     child.textContent = `${res.data.res}`;
     newdiv.appendChild(child);
     let warning = document.getElementById("warning")
-    warning.className = "card card-body";
     warning.appendChild(newdiv);
+}
+
+async function password(e){
+    e.preventDefault();
+    let obj = {
+        email:document.getElementById("email").value
+    }
+    let res = await axios.post('http://localhost:5000/forgotpassword',obj)
+    
 }

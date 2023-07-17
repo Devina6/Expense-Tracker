@@ -73,17 +73,17 @@ async function removeItem(e){
     if(e.target.classList.contains('delete')){
         if(confirm('Are you sure?')){
             
-            let tRow = e.target.parentElement.parentElement;
+           let tRow = e.target.parentElement.parentElement;
             const _id = e.target.parentElement.parentElement.getAttribute('data-key');
-            
             let url = "http://localhost:5000/expense/delete/"+ _id
-            await axios.get(url,{headers:{"Authorizaton":token}})
-                .then(response => {
-                    tBody.removeChild(tRow);
-                    window.location.reload;
-                })
-                .catch(err => console.log(err))
-            
+            try{
+                let del = await axios.get(url,{headers:{"Authorizaton":token}})
+                tBody.removeChild(tRow);
+                window.location.reload;
+            }
+            catch(err){
+                console.log(err)
+            }
         }
     }
 }
@@ -112,6 +112,8 @@ async function premium(e){
                             //alert("You are a PREMIUM user now");
                             let data = document.getElementById('premiumdata');
                             data.textContent = "You are now a PREMIUM User!"
+                            let btn2 = document.getElementById('leaderBtn');
+                            btn2.style.visibility = 'visible';
                         })
                         .catch(err => console.log(err))
                     }

@@ -10,31 +10,30 @@
             <div id="main"><br><br>
                 <h2 class="text-center" style="font-family: Georgia, 'Times New Roman', Times, serif;">User Registration</h2>
                 <div id="main" class="card card-body">
-                   <form action="" method="POST">
+                   <form  method="post">
                         <div>
                             <div class="row">
                                 <div class="col">
                                     <label for="firstName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" placeholder="First name" aria-label="First name" id="firstName" required>
+                                    <input type="text" class="form-control" aria-label="First name" id="firstName" required>
                                 </div>
                                 <div class="col">
                                     <label for="lastName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" id="lastName" required>
+                                    <input type="text" class="form-control" aria-label="Last name" id="lastName" required>
                                 </div>
                             </div>
                             <div class="row ">
-                                <div class="col-md">
+                                <div class="col">
                                     <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                    <input type="email" class="form-control" id="email" required>
                                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
-                                <div class="col-md">
+                                <div class="col">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="form-control" aria-label="Password" id="password" required>
                                 </div>
-                                </div>
                             </div>
-                           <div class="row ">
+                            <div class="row ">
                                 <div class="col">
                                     <br>
                                     <a class="btn btn-link" href="login.html"> Already Existing User? </a>
@@ -43,17 +42,17 @@
                             <div class="row ">
                                 <div class="col">
                                     <br><br>
-                                    <input type="submit" class="btn btn-primary btn-lg" value="Sign Up" onclick="details(event)">
+                                    <input type="submit" class="btn btn-primary btn-lg" value="Sign Up" onclick="signup(event)">
                                 </div>  
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-            <div id ="warning" class="card card-body"></div>
-        </div> 
+            <div id ="warning"></div>
+        </div>  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <script src="signup.js"></script> 
+        <script src="user.js"></script> 
     </body>
 </html>

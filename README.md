@@ -7,3 +7,7 @@ install sequelize
 install cors
 install bcrypt
 install jsonwebtoken
+install dotenv
+install razorpay
+install sib-api-v3-sdk
+install uuid

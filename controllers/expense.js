@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
-
 const User = require('../models/user');
 const Expense = require('../models/expense');
+const sequelize = require('../util/database');
 
 
 exports.getIndex = (req,res,next) => {
@@ -20,7 +20,8 @@ exports.getIndex = (req,res,next) => {
 }
 
 
-exports.postExpense = (req,res,next) => {
+exports.postExpense = async (req,res,next) => {
+    
     let amount = req.body.amount;
     let description = req.body.description;
     let category = req.body.category;
@@ -47,8 +48,9 @@ exports.postExpense = (req,res,next) => {
 })
 }
 
+
 exports.deleteExpense = (req,res,next) => {
-sequelize.transaction(async(t)=>{
+    sequelize.transaction(async(t)=>{
         try{
             const expense = await Expense.findOne({where:{id:req.params.expenseId}})
             const del = await Expense.destroy({where:{id:req.params.expenseId,userId:req.user.id}},{transaction:t})
@@ -61,4 +63,5 @@ sequelize.transaction(async(t)=>{
             return res.status(500).json({success:false,error:err})
                 }
     })
+    
 }

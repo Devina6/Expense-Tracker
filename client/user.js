@@ -1,4 +1,4 @@
-async function details(e){
+async function signup(e){
     e.preventDefault();
     let obj = {
         firstName:document.getElementById("firstName").value,
@@ -29,12 +29,12 @@ async function login(e){
         email:document.getElementById("email").value,
         password:document.getElementById("password").value
     }
-    let res = await axios.post('http://localhost:5000/login',obj);
+    let res = await axios.post('http://localhost:5000/login',obj)
     localStorage.setItem('token',res.data.token)
     let newdiv = document.createElement("div");
     if (res.data.pass){
         newdiv.className = "alert alert-success";
-         window.location.href = 'expense.html';
+        window.location.href = 'expense.html';
     }else{
         newdiv.className = "alert alert-danger";
     }
@@ -52,6 +52,14 @@ async function password(e){
     let obj = {
         email:document.getElementById("email").value
     }
-    let res = await axios.post('http://localhost:5000/forgotpassword',obj)
-    
+    try{
+        let res = await axios.post('http://localhost:5000/forgotpassword',obj)
+        localStorage.setItem("userToken",res.data.userToken);
+        localStorage.setItem("passwordToken",res.data.passwordToken);
+
+    }
+    catch(err){
+        console.log(err);
+    }    
 }
+

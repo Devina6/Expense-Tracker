@@ -8,7 +8,8 @@ const User = require('../models/user');
 const Expense = require('../models/expense');
 
 exports.leaderBoardStatus = (req,res,next) => {
-     User.findAll({
+
+  User.findAll({
     attributes:['firstName','lastName','totalExpense'],
     order:[['totalExpense','DESC']]
   })
@@ -17,6 +18,5 @@ exports.leaderBoardStatus = (req,res,next) => {
       })
       .catch(error => {
         console.error(error);
-      })      
-    
+      })    
 }

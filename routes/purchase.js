@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const purchaseController = require('../controllers/purchase');
-const userAuthentication = require('../middleware/auth');
+const authentication = require('../middleware/auth');
 
-router.get('/premiummembership',userAuthentication.authenticate,purchaseController.purchasepremium);
-router.post('/updatetransactionstatus',userAuthentication.authenticate,purchaseController.updateTransactionStatus);
-router.get('/ispremium',userAuthentication.authenticate,purchaseController.isPremium);
-
-
+router.get('/premiummembership',authentication.userAuthenticate,purchaseController.purchasepremium);
+router.post('/updatetransactionstatus',authentication.userAuthenticate,purchaseController.updateTransactionStatus);
+router.get('/ispremium',authentication.userAuthenticate,purchaseController.isPremium);
 
 module.exports = router;

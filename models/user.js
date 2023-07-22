@@ -26,10 +26,15 @@ const User = sequelize.define('user',{
         type:Sequelize.STRING,
         allowNull:false
     },
+    ispreminumuser:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false
+    },
     totalExpense:{
         type:Sequelize.INTEGER,
         allowNull:false
     }
+
 })
 
 module.exports = User;

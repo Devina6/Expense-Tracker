@@ -3,17 +3,19 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const sequelize = require('./util/database');
-const cors = require('cors');
+const cors = require('cors')
 require('dotenv').config();
 
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const ForgotPasswordRequests = require('./models/forgotpasswordrequests');
 
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
+
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -24,10 +26,13 @@ app.use('/expense',expenseRoutes);
 app.use('/purchase',purchaseRoutes);
 app.use('/premium',premiumRoutes);
 
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
+User.hasMany(ForgotPasswordRequests);
+ForgotPasswordRequests.belongsTo(User);
 
 sequelize
     .sync()

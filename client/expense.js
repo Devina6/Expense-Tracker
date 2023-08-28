@@ -180,3 +180,5 @@ function leaderBoardClose(e){
         list.removeChild(list.firstChild);
       }
 }
+
+

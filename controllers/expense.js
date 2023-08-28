@@ -5,7 +5,8 @@ const Sequelize = require('sequelize');
 const User = require('../models/user');
 const Expense = require('../models/expense');
 const sequelize = require('../util/database');
-
+const rootDir = require('../util/path');
+const fs = require('fs');
 
 exports.getIndex = (req,res,next) => {
     const id = req.user.id;
@@ -65,3 +66,4 @@ exports.deleteExpense = (req,res,next) => {
     })
     
 }
+

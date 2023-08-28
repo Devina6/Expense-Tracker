@@ -10,7 +10,7 @@
         <div class="offcanvas offcanvas-end text-bg-dark" id="leaderBtnShow">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" style="font-family: Georgia, 'Times New Roman', Times, serif;">LeaderBoard</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" onclick="leaderBoardClose(event)"></button>
             </div>
             <div class="offcanvas-body">
               <div>
@@ -21,20 +21,20 @@
         <div class="container">
             <div id="main">
                 <br><br>
-                <form  method="post">
+                <form  method="get">
                     <input id="razorpayBtn" type="submit" class="btn btn-success btn-lg" value="Buy Premium Membership" onclick="premium(event)" style="visibility: hidden;">
-                    <h2 class="text-left" id="premiumdata" style="font-family: Georgia, 'Times New Roman', Times, serif;"></h2>
+                    <h2 class="text-left" id="premiumdata" style="font-family: Georgia, 'Times New Roman', Times, serif;"></h2><br>
                     <input id="leaderBtn" type="button" class="btn btn-success btn-lg" data-bs-toggle="offcanvas" value="Leaderboard Status" onclick="leaderBoard(event)" style="visibility: hidden;" data-bs-target="#leaderBtnShow" >
-                    <input id="expenseBtn" type="button" class="btn btn-success btn-lg"  value="View Expenses" onclick="expenses(event)" style="visibility: hidden;">
+                    <a class="btn btn-success btn-lg" id="expenseBtn" aria-current="page" href="D:\Sharpener\Backend\Expense-Tracker\client\viewExpenses.html" style="visibility: hidden;">View Expenses</a>
                 </form>
-                <br><br>
+                <br>
                 <h2 class="text-center" style="font-family: Georgia, 'Times New Roman', Times, serif;">Add Expense</h2>
                 <div id="main" class="card card-body">
                    <form  method="post">
                         <div>
                             <div class="row ">
                                 <div class="col">
-                                    <label for="amount" class="form-label">Expense Amount:</label>
+                                    <label for="amount" class="form-label">Expense Amount</label>
                                     <input type="number" class="form-control" id="amount" required>
                                 </div>
                                 <div class="col">
@@ -62,7 +62,8 @@
                     </form>
                 </div>
             </div>
-            <div id ="listOfExpense" >
+            <br><br>
+            <div id ="expenseTable" >
                 <div id="main" class="card card-body">
                     <h1>Your Expenses. . . </h1>
                     <br><br>
@@ -75,7 +76,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
-                                <!--TABLE_BODY-->
                             </tbody>
                         </table>
                 </div>
@@ -85,6 +85,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script src="expense.js"></script> 
+        <script src="expense.js"></script>
     </body>
 </html>

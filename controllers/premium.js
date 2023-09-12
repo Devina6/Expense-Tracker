@@ -60,31 +60,69 @@ function getMonth(month){
     case('December'):{
       return 12
     }
+    defualt: return 0;
   }
 }
 
 
-exports.filterExpenses = async(req,res,next) => {
-  //console.log(req.body)
-  const userId = req.user.id;
-  const category = req.body.category;
-  const month = getMonth(req.body.month)
-  const year = req.body.year;
+exports.filterExpenses = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { category, year } = req.body;
+    let month1 = req.body.month;
+    const month = getMonth(req.body.month)
 
-  const expenses = await Expense.findAll({
-    attributes:['updatedAt','amount','description','category'],
-    where:{userId:userId,category:category,[Op.and]: [
-      sequelize.literal(`MONTH(updatedAt) = ${month}`),
-      sequelize.literal(`YEAR(updatedAt) = ${year}`),
-      ]
+    let categoryArray = ['Travel', 'Food', 'Entertainment', 'Health'] 
+    let yearArray = ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026']
+    
+
+    if (categoryArray.includes(category)==false && (month>=1 && month<=12)==false && yearArray.includes(year)==false) {
+      return res.json({ success: false });
     }
-  })
-  //console.log(expenses);
-  if(expenses.length>0){
-    return res.json({expenses,success:true});
+
+    const whereClause = {
+      userId: userId,
+    };
+    
+    if (category && categoryArray.includes(category)) {
+      whereClause.category = category;
+    }
+
+    if ((month && month!==0) || (year && yearArray.includes(year) )) {
+      whereClause.updatedAt = {};
+
+      if (month &&(month>=1 && month<=12)) {
+        whereClause.updatedAt[Op.and] = [
+          sequelize.literal(`MONTH(updatedAt) = ${month}`),
+        ];
+      }
+
+      if (year && yearArray.includes(year)) {
+        if (!whereClause.updatedAt[Op.and]) {
+          whereClause.updatedAt[Op.and] = [];
+        }
+        whereClause.updatedAt[Op.and].push(
+          sequelize.literal(`YEAR(updatedAt) = ${year}`)
+        );
+      }
+    }
+
+    const expenses = await Expense.findAll({
+      attributes: ['updatedAt', 'amount', 'description', 'category'],
+      where: whereClause,
+    });
+
+    if (expenses.length > 0) {
+      return res.json({ expenses, success: true });
+    } else {
+      return res.json({ success: false });
+    }
+  } catch (error) {
+    
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Internal Server Error" });
   }
-  return res.json({success:false});
-}
+};
 
 async function uploadToS3(data,filename){
 

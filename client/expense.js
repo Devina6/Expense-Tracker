@@ -15,17 +15,67 @@ window.onload = async() => {
                 let btn = document.getElementById('razorpayBtn');
                 btn.style.visibility = 'visible';
             }
-            axios.get('http:localhost:5000/expense/index',{headers:{"userAuthorization":token}})
-                .then(response2 => {
-                    for(var i=0;i<response2.data.length;i++){
-                        displayExpense(response2.data[i]);
-                    }
+            const page = 1;
+            axios.get(`http:localhost:5000/expense/index?page=${page}`,{headers:{"userAuthorization":token}})
+                .then(({data:{expenses, ...pageData}}) => {
+                    displayExpense(expenses)
+                    const pagination = showPagination(pageData)
                 })
                 .catch(err => console.log(err))
         }).catch(err => console.log(err))
     }
 
+function showPagination({
+    currentPage,
+    hasNextPage,
+    nextPage,
+    hasPreviousPage,
+    previousPage,
+    lastPage
+}) {
+    const nextBtn = document.getElementById('next')
+    const previousBtn = document.getElementById('previous')
+    const currentBtn = document.getElementById('current')
+    currentBtn.value = currentPage;
 
+    const nextButtonClickHandler = () => getExpenses(nextPage);
+    const previousButtonClickHandler = () => getExpenses(previousPage);
+
+    nextBtn.removeEventListener('click', nextButtonClickHandler);
+    previousBtn.removeEventListener('click', previousButtonClickHandler);
+
+    if (hasNextPage) {
+        nextBtn.disabled = false;
+        nextBtn.addEventListener('click',nextButtonClickHandler)
+    } else {
+        nextBtn.disabled = true;
+    }
+
+    if (hasPreviousPage) {
+        previousBtn.disabled = false;
+        previousBtn.addEventListener('click',previousButtonClickHandler)
+    } else {
+        previousBtn.disabled = true;
+    }
+}
+
+
+async function getExpenses(page){
+    try{
+        console.log(page);
+        const { data: { expenses, ...pageData } } = await axios.get(`http:localhost:5000/expense/index?page=${page}`, { headers: { "userAuthorization": token } })
+        let clearData = document.getElementById('tableBody');
+        while (clearData.firstChild) {
+            clearData.removeChild(clearData.firstChild);
+        }
+        displayExpense(expenses)
+        showPagination(pageData)
+    }catch(err){
+        console.log(err)
+    }
+
+}
+    
 async function expense(e){
     e.preventDefault();
     let obj = {
@@ -42,28 +92,31 @@ async function expense(e){
     } 
 }
 
-function displayExpense(expense){
-    let parentTBody = document.getElementById('tableBody');
-    let childTRow = document.createElement('tr');
-    let childTRHData1 = document.createElement('td');
-    let childTRHData2 = document.createElement('td');
-    let childTRHData3 = document.createElement('td');
-    childTRow.setAttribute('data-key',expense.id);
-    childTRHData1.textContent = expense.amount
-    childTRHData2.textContent = expense.description
-    childTRHData3.textContent = expense.category
-    parentTBody.appendChild(childTRow);
-    childTRow.appendChild(childTRHData1)
-    childTRow.appendChild(childTRHData2)
-    childTRow.appendChild(childTRHData3)
+function displayExpense(expenses){
+    for (var i = 0; i < expenses.length; i++) {
+        let parentTBody = document.getElementById('tableBody');
+        let childTRow = document.createElement('tr');
+        let childTRHData1 = document.createElement('td');
+        let childTRHData2 = document.createElement('td');
+        let childTRHData3 = document.createElement('td');
+        childTRow.setAttribute('data-key',expenses[i].id);
+        childTRHData1.textContent = expenses[i].amount
+        childTRHData2.textContent = expenses[i].description
+        childTRHData3.textContent = expenses[i].category
+        parentTBody.appendChild(childTRow);
+        childTRow.appendChild(childTRHData1)
+        childTRow.appendChild(childTRHData2)
+        childTRow.appendChild(childTRHData3)
+        
+        let newdiv = document.createElement('div');
+        newdiv.className = "btn-group";
+        let deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger delete';
+        deleteBtn.appendChild(document.createTextNode('Remove'));
+        newdiv.appendChild(deleteBtn);
+        childTRow.appendChild(newdiv);
+    }
     
-    let newdiv = document.createElement('div');
-    newdiv.className = "btn-group";
-    let deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-danger delete';
-    deleteBtn.appendChild(document.createTextNode('Remove'));
-    newdiv.appendChild(deleteBtn);
-    childTRow.appendChild(newdiv);
 }
 
 var tBody = document.getElementById('tableBody');
@@ -158,6 +211,10 @@ async function leaderBoard(e){
     e.preventDefault();
     axios.get('http://localhost:5000/premium/leaderboardstatus')
         .then(lists => {
+            let parent = document.getElementById('leaderOrder');
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
             lists.data.forEach(list => {
                 displayStatus(list)
             })
@@ -173,12 +230,4 @@ function displayStatus(list){
     parent.appendChild(child);
     
 }
-
-function leaderBoardClose(e){
-    let list = document.getElementById('leaderOrder');
-    while (list.firstChild) {
-        list.removeChild(list.firstChild);
-      }
-}
-
 

@@ -8,16 +8,31 @@ const sequelize = require('../util/database');
 const rootDir = require('../util/path');
 const fs = require('fs');
 
-exports.getIndex = (req,res,next) => {
-    const id = req.user.id;
-    Expense.findAll({where:{userId:id}})
-        .then(expenses => {
-            res.json(expenses);
+exports.getIndex = async (req,res,next) => {
+    try{
+        const page = req.query.page;
+        const expensePerPage = 1;
+        const id = req.user.id;
+
+        const {count, rows} = await Expense.findAndCountAll({
+            where:{userId:id},
+            offset:(page-1)*expensePerPage,//skip offset number of rows and then fetch
+            limit: expensePerPage//fetch number of rows
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
-        });
+        res.json({
+            expenses:rows,
+            currentPage: parseInt(page),
+            hasNextPage: expensePerPage*page < count,
+            nextPage: parseInt(page)+1,
+            hasPreviousPage:parseInt(page)>1,
+            previousPage: parseInt(page)-1,
+            lastPage: Math.ceil(count/expensePerPage)
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error');
+    };
 }
 
 

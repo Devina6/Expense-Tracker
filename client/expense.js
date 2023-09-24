@@ -19,7 +19,7 @@ window.onload = async() => {
             axios.get(`http:localhost:5000/expense/index?page=${page}`,{headers:{"userAuthorization":token}})
                 .then(({data:{expenses, ...pageData}}) => {
                     displayExpense(expenses)
-                    const pagination = showPagination(pageData)
+                    showPagination(pageData)
                 })
                 .catch(err => console.log(err))
         }).catch(err => console.log(err))
@@ -38,22 +38,16 @@ function showPagination({
     const currentBtn = document.getElementById('current')
     currentBtn.value = currentPage;
 
-    const nextButtonClickHandler = () => getExpenses(nextPage);
-    const previousButtonClickHandler = () => getExpenses(previousPage);
-
-    nextBtn.removeEventListener('click', nextButtonClickHandler);
-    previousBtn.removeEventListener('click', previousButtonClickHandler);
-
     if (hasNextPage) {
         nextBtn.disabled = false;
-        nextBtn.addEventListener('click',nextButtonClickHandler)
+        nextBtn.addEventListener('click',() => getExpenses(nextPage))
     } else {
         nextBtn.disabled = true;
     }
 
     if (hasPreviousPage) {
         previousBtn.disabled = false;
-        previousBtn.addEventListener('click',previousButtonClickHandler)
+        previousBtn.addEventListener('click',() => getExpenses(previousPage))
     } else {
         previousBtn.disabled = true;
     }
@@ -86,6 +80,7 @@ async function expense(e){
     try{
         const result = await axios.post('http://localhost:5000/expense/addExpense',obj,{headers:{"userAuthorization":token}})
         displayExpense(result.data.expense);
+        window.location.reload;
     }
     catch(err){
         console.log(err)

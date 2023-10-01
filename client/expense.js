@@ -1,29 +1,36 @@
 let token = localStorage.getItem('token');
 
 window.onload = async() => {
-     await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"userAuthorization":token}})
-        .then(response1 => {
-            if(response1.data){
-                let data = document.getElementById('premiumdata');
-                data.textContent = "You are a PREMIUM User!"
-                let btn1 = document.getElementById('leaderBtn');
-                btn1.style.visibility = 'visible';
-                let btn2 = document.getElementById('expenseBtn');
-                btn2.style.visibility = 'visible';
-            }
-            else{
-                let btn = document.getElementById('razorpayBtn');
-                btn.style.visibility = 'visible';
-            }
-            const page = 1;
-            axios.get(`http:localhost:5000/expense/index?page=${page}`,{headers:{"userAuthorization":token}})
-                .then(({data:{expenses, ...pageData}}) => {
-                    displayExpense(expenses)
-                    showPagination(pageData)
-                })
-                .catch(err => console.log(err))
-        }).catch(err => console.log(err))
+    try{
+        
+        const response1 = await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"userAuthorization":token}})
+        localStorage.setItem("rowsPerPage",3)
+        await getExpenses(1);
+        if(response1.data){
+            let data = document.getElementById('premiumdata');
+            data.textContent = "You are a PREMIUM User!"
+            let btn1 = document.getElementById('leaderBtn');
+            btn1.style.visibility = 'visible';
+            let btn2 = document.getElementById('expenseBtn');
+            btn2.style.visibility = 'visible';
+        }
+        else{
+            let btn = document.getElementById('razorpayBtn');
+            btn.style.visibility = 'visible';
+        }
     }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function rowPerPage(e){
+    e.preventDefault();
+    const row = document.getElementById('rows').value;
+    console.log(row);
+    localStorage.setItem("rowsPerPage",`${row}`)
+    await getExpenses(1);
+}
 
 function showPagination({
     currentPage,
@@ -56,8 +63,11 @@ function showPagination({
 
 async function getExpenses(page){
     try{
-        console.log(page);
-        const { data: { expenses, ...pageData } } = await axios.get(`http:localhost:5000/expense/index?page=${page}`, { headers: { "userAuthorization": token } })
+        let rows = parseInt(localStorage.getItem('rowsPerPage'))
+        let obj = {
+            rows:rows
+        }
+        const { data: { expenses, ...pageData } }  = await axios.post(`http:localhost:5000/expense/index?page=${page}`,obj,{headers:{"userAuthorization": token } })
         let clearData = document.getElementById('tableBody');
         while (clearData.firstChild) {
             clearData.removeChild(clearData.firstChild);
@@ -80,7 +90,7 @@ async function expense(e){
     try{
         const result = await axios.post('http://localhost:5000/expense/addExpense',obj,{headers:{"userAuthorization":token}})
         displayExpense(result.data.expense);
-        window.location.reload;
+        //window.location.reload;
     }
     catch(err){
         console.log(err)

@@ -11,9 +11,8 @@ const fs = require('fs');
 exports.getIndex = async (req,res,next) => {
     try{
         const page = req.query.page;
-        const expensePerPage = 3;
-        const id = req.user.id;
-
+        let expensePerPage = req.body.rows
+        const id = req.user.id
         const {count, rows} = await Expense.findAndCountAll({
             where:{userId:id},
             offset:(page-1)*expensePerPage,//skip offset number of rows and then fetch

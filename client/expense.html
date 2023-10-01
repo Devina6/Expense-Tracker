@@ -24,7 +24,7 @@
                     <input id="razorpayBtn" type="submit" class="btn btn-success btn-lg" value="Buy Premium Membership" onclick="premium(event)" style="visibility: hidden;">
                     <h2 class="text-left" id="premiumdata" style="font-family: Georgia, 'Times New Roman', Times, serif;"></h2><br>
                     <input id="leaderBtn" type="button" class="btn btn-success btn-lg" data-bs-toggle="offcanvas" value="Leaderboard Status" onclick="leaderBoard(event)" style="visibility: hidden;" data-bs-target="#leaderBtnShow" >
-                    <a class="btn btn-success btn-lg" id="expenseBtn" aria-current="page" href="D:\Sharpener\Backend\Expense-Tracker\client\viewExpenses.html" style="visibility: hidden;">View Expenses</a>
+                    <a class="btn btn-success btn-lg" id="expenseBtn" aria-current="page" href="D:\Sharpener\Backend\Expense-Tracker\client\viewExpenses.html" style="visibility: hidden;">View Categorised Expenses</a>
                 </form>
                 <br>
                 <h2 class="text-center" style="font-family: Georgia, 'Times New Roman', Times, serif;">Add Expense</h2>
@@ -54,7 +54,7 @@
                             <div class="row ">
                                 <div class="col">
                                     <br>
-                                    <input type="submit" class="btn btn-success btn-lg" value="Add Expense" onclick="expense(event)">
+                                    <input type="submit" class="btn btn-success btn-lg" value="Add Expense" >
                                 </div>  
                             </div>
                         </div>
@@ -64,8 +64,19 @@
             <br>
             <div id ="expenseTable" >
                 <div id="main" class="card card-body">
-                    <h1>Your Expenses. . . </h1>
-                    <br><br>
+                    <div class="row">
+                        <div class="col">
+                            <h1>Your Expenses. . . </h1>
+                        </div>
+                        <div class="col col-lg-3">
+                            <form method="post">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <input type="number" class="form-control" id="rows" required>
+                                    <input type="submit" class="btn btn-success" value="Rows per page " onclick="rowPerPage(event)">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                         <table class="table">
                             <thead>
                                 <tr>

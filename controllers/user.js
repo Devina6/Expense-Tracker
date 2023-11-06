@@ -61,8 +61,9 @@ exports.signup = (req,res,next) => {
 }
 
 function generateToken(id){
-    return jwt.sign({userId:id},'8ytrdfghbvfde34567ytdcvyr57465rtfgjf47gy4557tyfghchgtue4348768fdchgyr5437097ttrfchvr5676865343wdghjf5xdy46tcrs7re4ech6u53tdytr56ehgu')
+    return jwt.sign({userId:id},process.env.TOKEN_SECRET)
 }
+
 exports.login = (req,res,next) => {
     const email = req.body.email;
     const password = req.body.password;

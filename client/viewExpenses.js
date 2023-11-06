@@ -28,7 +28,7 @@ async function expenseFilter(e){
     } 
     localStorage.setItem('filterExpense',JSON.stringify(obj));
     try{
-       const result = await axios.post('http://localhost:5000/premium/filterexpenses',obj,{headers:{"userAuthorization":token}})
+        const result = await axios.post('http://localhost:5000/premium/filterexpenses',obj,{headers:{"userAuthorization":token}})
         if(result.data.success){
             const parent = document.getElementById('tableBody');
             while (parent.firstChild) {
@@ -45,6 +45,8 @@ async function expenseFilter(e){
                 parent.removeChild(parent.firstChild);
               }
         }
+        
+        
     }
     catch(err){
         console.log(err)

@@ -3,7 +3,7 @@ let token = localStorage.getItem('token');
 window.onload = async() => {
     try{
         
-        const response1 = await axios.get('http:localhost:5000/purchase/ispremium',{headers:{"userAuthorization":token}})
+        const response1 = await axios.get('/purchase/ispremium',{headers:{"userAuthorization":token}})
         localStorage.setItem("rowsPerPage",3)
         await getExpenses(1);
         if(response1.data){
@@ -67,7 +67,7 @@ async function getExpenses(page){
         let obj = {
             rows:rows
         }
-        const { data: { expenses, ...pageData } }  = await axios.post(`http:localhost:5000/expense/index?page=${page}`,obj,{headers:{"userAuthorization": token } })
+        const { data: { expenses, ...pageData } }  = await axios.post(`/expense/index?page=${page}`,obj,{headers:{"userAuthorization": token } })
         let clearData = document.getElementById('tableBody');
         while (clearData.firstChild) {
             clearData.removeChild(clearData.firstChild);
@@ -88,7 +88,7 @@ async function expense(e){
         category:document.getElementById("category").value
     }
     try{
-        const result = await axios.post('http://localhost:5000/expense/addExpense',obj,{headers:{"userAuthorization":token}})
+        const result = await axios.post('/expense/addExpense',obj,{headers:{"userAuthorization":token}})
         displayExpense(result.data.expense);
         //window.location.reload;
     }
@@ -133,7 +133,7 @@ async function removeItem(e){
             
             let tRow = e.target.parentElement.parentElement;
             const _id = e.target.parentElement.parentElement.getAttribute('data-key');
-            let url = "http://localhost:5000/expense/delete/"+ _id
+            let url = "/expense/delete/"+ _id
             try{
                 let del = await axios.get(url,{headers:{"userAuthorization":token}})
                 tBody.removeChild(tRow);
@@ -151,7 +151,7 @@ async function premium(e){
     e.preventDefault();
     const token = localStorage.getItem('token');
     
-    await axios.get('http://localhost:5000/purchase/premiummembership',{headers:{"userAuthorization":token}})
+    await axios.get('/purchase/premiummembership',{headers:{"userAuthorization":token}})
             .then(response => {
                 let orderid = response.data.order.id;
                 let options = {
@@ -161,7 +161,7 @@ async function premium(e){
                     handler:async function (response){
                         try{
                             
-                            await axios.post('http://localhost:5000/purchase/updatetransactionstatus',{
+                            await axios.post('/purchase/updatetransactionstatus',{
                                 order_id:options.order_id,
                                 payment_id:response.razorpay_payment_id,
                         },
@@ -176,7 +176,7 @@ async function premium(e){
                             data.textContent = "You are now a PREMIUM User!"
                             let btn1 = document.getElementById('leaderBtn');
                             btn1.style.visibility = 'visible';
-                            let btn2 = document.getElementById('leaderBtn');
+                            let btn2 = document.getElementById('expenseBtn');
                             btn2.style.visibility = 'visible';
 
                         })
@@ -194,7 +194,7 @@ async function premium(e){
                 rzp1.on('payment.failed',async function(response1){
                    try{
                         
-                        await axios.post('http://localhost:5000/purchase/updatetransactionstatus',{
+                        await axios.post('/purchase/updatetransactionstatus',{
                             order_id:orderid,
                             payment_id:"00000000"
                         },{
@@ -214,7 +214,7 @@ async function premium(e){
 
 async function leaderBoard(e){
     e.preventDefault();
-    axios.get('http://localhost:5000/premium/leaderboardstatus')
+    axios.get('/premium/leaderboardstatus')
         .then(lists => {
             let parent = document.getElementById('leaderOrder');
             while (parent.firstChild) {

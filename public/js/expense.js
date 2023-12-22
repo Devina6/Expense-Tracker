@@ -1,9 +1,11 @@
 let token = localStorage.getItem('token');
-const expenseGeneralBtn = form1.querySelector("#expenseGeneral");
-expenseGeneralBtn.addEventListener("click",expense);
+const buttons = {
+    expenseGeneralBtn : form1.querySelector("#expenseGeneral"),
+    rowsBtn : form2.querySelector("#rows")
+}
+buttons.expenseGeneralBtn.addEventListener("click",expense);
+buttons.rowsBtn.addEventListener("click",rowPerPage);
 
-const rowsBtn = form1.querySelector("#rows");
-rowsBtn.addEventListener("click",rowPerPage);
 window.onload = async() => {
     try{
         
@@ -94,7 +96,8 @@ async function expense(e){
     try{
         const result = await axios.post('/expense/addExpense',obj,{headers:{"userAuthorization":token}})
         displayExpense(result.data.expense);
-        //window.location.reload;
+        window.location.reload();
+       
     }
     catch(err){
         console.log(err)

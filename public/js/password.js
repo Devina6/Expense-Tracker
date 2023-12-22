@@ -1,3 +1,5 @@
+const passwordBtn = form1.querySelector("#resetPassword");
+passwordBtn.addEventListener("click",passwordreset);
 async function resetPassword(e){
     e.preventDefault();
     const userToken = localStorage.getItem("userToken");

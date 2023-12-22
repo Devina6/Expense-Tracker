@@ -10,8 +10,22 @@ require('dotenv').config();
 const User = require('../models/user');
 const ForgotPassword = require('../models/forgotpasswordrequests');
 
-
-exports.signup = (req,res,next) => {
+exports.gethomePage = (request, response, next) => {
+    response.sendFile('home.html', { root: 'client' });
+}
+exports.geterrorPage = (request,response,next) =>{
+    response.sendFile('404.html',{root:'client'});
+}
+exports.getsignup = (request,response,next)=>{
+    response.sendFile('signup.html',{root:'client'})
+}
+exports.getlogin = (request,response,next)=>{
+    response.sendFile('login.html',{root:'client'})
+}
+exports.getforgotpassword = (request,response,next)=>{
+    response.sendFile('password.html',{root:'client'})
+}
+exports.postsignup = (req,res,next) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
@@ -64,7 +78,7 @@ function generateToken(id){
     return jwt.sign({userId:id},process.env.TOKEN_SECRET)
 }
 
-exports.login = (req,res,next) => {
+exports.postlogin = (req,res,next) => {
     const email = req.body.email;
     const password = req.body.password;
     User.findAll({where:{email:email}})
@@ -93,7 +107,7 @@ exports.login = (req,res,next) => {
         })
 }
 
-exports.forgotPassword = async(req,res,next) => {
+exports.postforgotPassword = async(req,res,next) => {
     try{
         const email = req.body.email
         let user = await User.findOne({where:{email:email}});

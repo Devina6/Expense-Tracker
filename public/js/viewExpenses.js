@@ -1,5 +1,11 @@
 let token = localStorage.getItem('token');
 
+const filterBtn = form1.querySelector("#expenseFilter");
+filterBtn.addEventListener("click",expenseFilter );
+
+const downloadBtn = form1.querySelector("#downlaod");
+downlaodBtn.addEventListener("click",download );
+
 function displayExpense(expense){
     let parentTBody = document.getElementById('tableBody');
     let childTRow = document.createElement('tr');

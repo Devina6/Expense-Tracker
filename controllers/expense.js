@@ -8,6 +8,12 @@ const sequelize = require('../util/database');
 const rootDir = require('../util/path');
 const fs = require('fs');
 
+exports.getExpenses = (request,response,next) =>{
+    response.sendFile('expense.html',{root:'client'});
+}
+exports.getviewExpenses = (request, response, next) => {
+    response.sendFile('viewExpenses.html', { root: 'client' });
+}
 exports.getIndex = async (req,res,next) => {
     try{
         const page = req.query.page;

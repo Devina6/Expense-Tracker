@@ -20,15 +20,14 @@ const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
 
 const accessLog = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' }) //flag a -> append to file 
-app.use(helmet())
+//app.use(helmet())
 app.use(bodyParser.urlencoded({extended:false})); 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined', { stream: accessLog }));
+app.use(express.static('public'));
 
- 
-
-app.use(userRoutes);
+app.use('',userRoutes);
 app.use('/expense',expenseRoutes);
 app.use('/purchase',purchaseRoutes);
 app.use('/premium',premiumRoutes);
@@ -41,12 +40,18 @@ Order.belongsTo(User);
 User.hasMany(ForgotPasswordRequests);
 ForgotPasswordRequests.belongsTo(User);
 
-sequelize
-    .sync()
-    //.sync({force:true})
-    .then(result => {
-        app.listen(process.env.PORT || 5000);
-    })
-    .catch(err => //app.use(morgan(err,{stream:log}))
-        console.log(err)
-        )
+async function initiate(){
+    try{
+        await sequelize
+        .sync()//.sync({force:true})
+        .then(result => {
+            app.listen(process.env.PORT);
+        })
+    }
+        catch(err){ //app.use(morgan(err,{stream:log}))
+            console.log(err);
+        }
+    }
+initiate();
+            
+    

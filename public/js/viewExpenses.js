@@ -1,10 +1,11 @@
 let token = localStorage.getItem('token');
+const buttons = {
+    filterBtn : document.querySelector("#expenseFilter"),
+    downloadBtn : document.querySelector("#downlaod")
+}
 
-const filterBtn = form1.querySelector("#expenseFilter");
-filterBtn.addEventListener("click",expenseFilter );
-
-const downloadBtn = form1.querySelector("#downlaod");
-downlaodBtn.addEventListener("click",download );
+buttons.filterBtn.addEventListener("click",expenseFilter );
+buttons.downloadBtn.addEventListener("click",download );
 
 function displayExpense(expense){
     let parentTBody = document.getElementById('tableBody');
@@ -26,6 +27,7 @@ function displayExpense(expense){
     
 }
 async function expenseFilter(e){
+    console.log('filter')
     e.preventDefault();
     let obj = {
         category:document.getElementById('category').value,

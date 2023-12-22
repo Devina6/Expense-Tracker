@@ -1,5 +1,9 @@
 let token = localStorage.getItem('token');
+const expenseGeneralBtn = form1.querySelector("#expenseGeneral");
+expenseGeneralBtn.addEventListener("click",expense);
 
+const rowsBtn = form1.querySelector("#rows");
+rowsBtn.addEventListener("click",rowPerPage);
 window.onload = async() => {
     try{
         

@@ -1,5 +1,6 @@
 const passwordBtn = form1.querySelector("#resetPassword");
 passwordBtn.addEventListener("click",passwordreset);
+
 async function resetPassword(e){
     e.preventDefault();
     const userToken = localStorage.getItem("userToken");
@@ -28,7 +29,18 @@ async function passwordreset(e){
             }
 
             let reset = await axios.post(`/resetpassword`,obj,{headers:{"userAuthorization":userToken,"passwordAuthorization":passwordToken}})
-            console.log(reset)
+            if(reset.status===200){
+                let newdiv = document.createElement("div");
+                newdiv.className = "alert alert-success";
+                newdiv.role = "alert";
+                let child = document.createElement("p");
+                child.textContent = 'Your password has been reset :)';
+                newdiv.appendChild(child);
+                let warning = document.getElementById("warning")
+                warning.appendChild(newdiv);
+                let btn1 = document.getElementById('loginBtn');
+                btn1.style.visibility = 'visible';
+            }
         }else{
             
             alert("password dont match");

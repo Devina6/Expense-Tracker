@@ -1,10 +1,11 @@
-//import axios from '../../node_modules/axios';
-console.log('helloooo')
-//const signupBtn = form2.querySelector("#signup");
-//signupBtn.addEventListener("click",signup);
+const signupBtn = form2.querySelector("#signup");
+signupBtn.addEventListener("click",signup);
 
 const loginBtn = form1.querySelector("#login");
 loginBtn.addEventListener("click",login );
+
+const recoveryBtn = form1.querySelector("#accRecovery");
+recoveryBtn.addEventListener("click",password );
 
 async function signup(e){
     e.preventDefault();

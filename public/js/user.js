@@ -1,12 +1,21 @@
+//import axios from '../../node_modules/axios';
+console.log('helloooo')
+//const signupBtn = form2.querySelector("#signup");
+//signupBtn.addEventListener("click",signup);
+
+const loginBtn = form1.querySelector("#login");
+loginBtn.addEventListener("click",login );
+
 async function signup(e){
     e.preventDefault();
+    console.log('new user')
     let obj = {
         firstName:document.getElementById("firstName").value,
         lastName:document.getElementById("lastName").value,
         email:document.getElementById("email").value,
         password:document.getElementById("password").value
     };
-    let res = await axios.post('http://localhost:5000/adduser',obj);
+    let res = await axios.post('/adduser',obj);
 
     let newdiv = document.createElement("div");
     if(res.data.pass){
@@ -22,21 +31,20 @@ async function signup(e){
     let warning = document.getElementById("warning")
     warning.appendChild(newdiv);
 }
-
 async function login(e){
     e.preventDefault();
     let obj = {
         email:document.getElementById("email").value,
         password:document.getElementById("password").value
     }
-    let res = await axios.post('http://localhost:5000/login',obj)
+    let res = await axios.post('/login',obj)
     localStorage.setItem('token',res.data.token)
     let newdiv = document.createElement("div");
     if (res.data.pass){
         newdiv.className = "alert alert-success";
-        window.location.href = 'expense.html';
+        window.location.href = 'expense';
     }else{
-        newdiv.className = "alert alert-danger";
+        newdiv.className = "alert alert-danger"
     }
     
     newdiv.role = "alert";
@@ -45,6 +53,7 @@ async function login(e){
     newdiv.appendChild(child);
     let warning = document.getElementById("warning")
     warning.appendChild(newdiv);
+    
 }
 
 async function password(e){
@@ -53,7 +62,7 @@ async function password(e){
         email:document.getElementById("email").value
     }
     try{
-        let res = await axios.post('http://localhost:5000/forgotpassword',obj)
+        let res = await axios.post('/forgotpassword',obj)
         localStorage.setItem("userToken",res.data.userToken);
         localStorage.setItem("passwordToken",res.data.passwordToken);
 

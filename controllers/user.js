@@ -143,8 +143,8 @@ exports.postforgotPassword = async(req,res,next) => {
                 },
                 htmlContent:
                     `<h1>Click the link to
-                    <a href="http://localhost:5000/password/${forgotpass.dataValues.id}" onclick="resetPassword(event)"> Reset Password </a></h1>
-                    `
+                    <a href="${process.env.WEBSITE}/password/${forgotpass.dataValues.id}" > Reset Password </a>
+                    </h1>`
                 } 
             const sendmail = await tranEmailApi.sendTransacEmail(sendSmtpEmail)
                 console.log(sendmail)
@@ -160,19 +160,14 @@ exports.postforgotPassword = async(req,res,next) => {
 
 exports.resetPassword = async(req,res,next) => {
     const passwordid = req.params.passwordId
-
-    
     try{
         const request = await ForgotPassword.findAll({where:{isActive:true,id:passwordid}})
-                fs.readFile(path.join(rootDir, 'client', 'resetpassword.html'), 'utf8', (err, data) => {
-                    if (err) {
-                        console.log(err);
-                        res.status(500).send('Internal Server Error');
-                    } else {
-                        return res.send(data)
-                    }
-                })
-                
+        if(request){
+            res.sendFile('resetpassword.html', { root: 'client' });
+        }
+        else{
+            res.status(500).send('Internal Server Error');
+        }       
     }
     catch(err){
         console.log(err);    }

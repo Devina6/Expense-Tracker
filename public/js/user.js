@@ -1,11 +1,19 @@
-const signupBtn = form2.querySelector("#signup");
-signupBtn.addEventListener("click",signup);
-
-const loginBtn = form1.querySelector("#login");
-loginBtn.addEventListener("click",login );
-
-const recoveryBtn = form1.querySelector("#accRecovery");
-recoveryBtn.addEventListener("click",password );
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.querySelector('#loginBtn');
+    const signupBtn = document.querySelector('#signupBtn');
+    const recoveryBtn = document.querySelector('#recoveryBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', login);
+      }
+    
+      if (signupBtn) {
+        signupBtn.addEventListener('click', signup);
+      }
+    
+      if (recoveryBtn) {
+        recoveryBtn.addEventListener('click', password);
+      }
+    });
 
 async function signup(e){
     e.preventDefault();
@@ -21,6 +29,7 @@ async function signup(e){
     let newdiv = document.createElement("div");
     if(res.data.pass){
         newdiv.className = "alert alert-success";
+        window.location.href = 'expense';
     }else{
         newdiv.className = "alert alert-danger";
     }
@@ -33,11 +42,13 @@ async function signup(e){
     warning.appendChild(newdiv);
 }
 async function login(e){
+    console.log('login process')
     e.preventDefault();
     let obj = {
         email:document.getElementById("email").value,
         password:document.getElementById("password").value
     }
+    console.log(obj)
     let res = await axios.post('/login',obj)
     localStorage.setItem('token',res.data.token)
     let newdiv = document.createElement("div");
@@ -62,6 +73,14 @@ async function password(e){
     let obj = {
         email:document.getElementById("email").value
     }
+    let newdiv = document.createElement("div");
+    newdiv.className = "alert alert-success";
+    newdiv.role = "alert";
+    let child = document.createElement("p");
+    child.textContent = 'Account Recovery - Password Reset Link has been sent to your mail.';
+    newdiv.appendChild(child);
+    let warning = document.getElementById("warning")
+    warning.appendChild(newdiv);
     try{
         let res = await axios.post('/forgotpassword',obj)
         localStorage.setItem("userToken",res.data.userToken);
